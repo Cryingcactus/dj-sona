@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+    dj-sona:
+        build: .
+        ports:
+            - "8000:5000"
+        environment:
+            - token=${token}

@@ -1,0 +1,71 @@
+org: cryingcactus
+app: dj-sona
+service: dj-sona
+frameworkVersion: "3"
+
+custom:
+    historyTableName: "dj-sona-history-${sls:stage}"
+    queueTableName: "dj-sona-queue-${sls:stage}"
+
+provider:
+    name: aws
+    runtime: nodejs14.x
+    iam:
+        role:
+            statements:
+                - Effect: Allow
+                  Action:
+                      - dynamodb:Query
+                      - dynamodb:Scan
+                      - dynamodb:GetItem
+                      - dynamodb:PutItem
+                      - dynamodb:UpdateItem
+                      - dynamodb:DeleteItem
+                  Resource:
+                      - Fn::GetAtt: [HistoryTable, Arn]
+    environment:
+        HISTORY_TABLE_NAME: ${self:custom.historyTableName}
+        QUEUE_TABLE_NAME: ${self:custom.queueTableName}
+
+functions:
+    requestSong:
+        handler: src/requestSong.handler
+        events:
+            - http:
+                  path: requestSong
+                  method: POST
+    playNextSong:
+        handler: src/playNextSong.handler
+        events:
+            - http:
+                  path: playNextSong
+                  method: POST
+
+resources:
+    Resources:
+        HistoryTable:
+            Type: AWS::DynamoDB::Table
+            Properties:
+                AttributeDefinitions:
+                    - AttributeName: requestedSong
+                      AttributeType: S
+                KeySchema:
+                    - AttributeName: requestedSong
+                      KeyType: HASH
+                BillingMode: PAY_PER_REQUEST
+                TableName: ${self:custom.historyTableName}
+        QueueTable:
+            Type: AWS::DynamoDB::Table
+            Properties:
+                AttributeDefinitions:
+                    - AttributeName: guildId
+                      AttributeType: S
+                KeySchema:
+                    - AttributeName: guildId
+                      KeyType: HASH
+                BillingMode: PAY_PER_REQUEST
+                TableName: ${self:custom.queueTableName}
+
+plugins:
+    - serverless-offline
+    - serverless-dotenv-plugin

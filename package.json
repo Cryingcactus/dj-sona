@@ -1,0 +1,30 @@
+{
+    "name": "dj-sona",
+    "version": "1.0.0",
+    "description": "<!-- title: 'Serverless Framework Node Express API service backed by DynamoDB on AWS' description: 'This template demonstrates how to develop and deploy a simple Node Express API service backed by DynamoDB running on AWS Lambda using the traditional Serverless Framework.' layout: Doc framework: v3 platform: AWS language: nodeJS priority: 1 authorLink: 'https://github.com/serverless' authorName: 'Serverless, inc.' authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4' -->",
+    "dependencies": {
+        "aws-sdk": "^2.1137.0",
+        "discord-interactions": "^3.2.0",
+        "discord.js": "^12.5.3",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "serverless-http": "^2.7.0",
+        "yt-search": "^2.10.3",
+        "ytdl-core": "^4.11.0",
+        "ffmpeg-static": "^4.4.1",
+        "@discordjs/opus": "^0.5.3"
+    },
+    "devDependencies": {
+        "serverless-dotenv-plugin": "^4.0.1",
+        "serverless-offline": "^8.8.0"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon --exec \"sls offline\"",
+        "start-local": "docker-compose --env-file ./.env.local up --force-recreate --build",
+        "docker-deploy": "docker build -t dj-sona .",
+        "deploy": "sls deploy"
+    },
+    "author": "",
+    "license": "ISC"
+}
